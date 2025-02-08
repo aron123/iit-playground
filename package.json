@@ -1,0 +1,21 @@
+{
+  "name": "iit-playground",
+  "version": "1.0.0",
+  "description": "API playground for Computer Science Engineer students of the University of Miskolc.",
+  "license": "MIT",
+  "author": "Kiss, Áron",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node index.ts",
+    "start:dev": "ts-node-dev index.ts"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0"
+  }
+}

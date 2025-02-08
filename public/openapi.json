@@ -1,0 +1,366 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Taxi Register - IIT Playground",
+    "version": "1.0.0",
+    "description": "The server stores data on vehicles of imaginary taxi companies. Each taxi company is represented by a student. \n\nStudents identify themself in the system with their Neptun code. A maximum of 10 cars can be stored per student.\n\n**IMPORTANT:** The system is not a permanent storage, data will be reset every midnight.",
+    "contact": {
+      "name": "Áron Kiss (University of Miskolc)",
+      "email": "aron.kiss@uni-miskolc.hu"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://iit-playground.arondev.hu/"
+    }
+  ],
+  "paths": {
+    "/api/{neptun}/car": {
+      "parameters": [
+        {
+          "name": "neptun",
+          "in": "path",
+          "description": "The student's Neptun code. It is checked in a case-insensitive manner.",
+          "example": "TEST01",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "List all cars",
+        "description": "Lists all cars. By default, 5 randomly generated car is assigned to each student at system startup.",
+        "operationId": "listCars",
+        "responses": {
+          "200": {
+            "description": "A list of cars",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Car"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/NeptunErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new car.",
+        "description": "Creates a new car. A maximum of 10 cars can be stored per student. The given ID will be overridden by the database, please check the response for the valid Car identifier.",
+        "operationId": "createCar",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Car"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The created car",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Car"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/NeptunErrorResponse"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modify a car",
+        "description": "Modifies an already existing car.",
+        "operationId": "modifyCar",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Car"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The modified car",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Car"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/NeptunErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          }
+        }
+      }
+    },
+    "/api/{neptun}/car/{id}": {
+      "parameters": [
+        {
+          "name": "neptun",
+          "in": "path",
+          "description": "The student's Neptun code. It is checked in a case-insensitive manner.",
+          "example": "TEST01",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get a car by ID",
+        "description": "Queries a car by its unique identifier.",
+        "operationId": "getCar",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested car",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Car"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/NeptunErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a car by ID",
+        "description": "Deletes a car by its unique identifier.",
+        "operationId": "deleteCar",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Car deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/GenericErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/NeptunErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Car": {
+        "type": "object",
+        "required": [
+          "id",
+          "brand",
+          "model",
+          "fuelUse",
+          "owner",
+          "dayOfCommission",
+          "electric"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique car ID",
+            "example": 1
+          },
+          "brand": {
+            "type": "string",
+            "enum": [
+              "Toyota",
+              "Honda",
+              "Ford",
+              "Chevrolet",
+              "Nissan",
+              "BMW",
+              "Mercedes-Benz",
+              "Volkswagen",
+              "Audi",
+              "Hyundai",
+              "Kia",
+              "Subaru",
+              "Lexus",
+              "Mazda",
+              "Tesla",
+              "Jeep",
+              "Porsche",
+              "Volvo",
+              "Jaguar",
+              "Land Rover",
+              "Mitsubishi",
+              "Ferrari",
+              "Lamborghini"
+            ],
+            "example": "Toyota"
+          },
+          "model": {
+            "type": "string",
+            "description": "Car model",
+            "minLength": 1,
+            "example": "Aygo"
+          },
+          "fuelUse": {
+            "type": "number",
+            "description": "Fuel consumption (0 if electric is true, otherwise > 0)",
+            "minimum": 0,
+            "example": 6.1
+          },
+          "owner": {
+            "type": "string",
+            "description": "Owner's name (must contain at least one space)",
+            "pattern": ".* .+",
+            "example": "John Smith"
+          },
+          "dayOfCommission": {
+            "type": "string",
+            "format": "date",
+            "description": "Date of commission (YYYY-MM-DD)",
+            "example": "2024-01-15"
+          },
+          "electric": {
+            "type": "boolean",
+            "description": "Whether the car is electric",
+            "example": false
+          }
+        }
+      }
+    },
+    "responses": {
+      "NeptunErrorResponse": {
+        "description": "Authorization error, when the Neptun code is invalid.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "The given Neptun code does not exist."
+                }
+              }
+            }
+          }
+        }
+      },
+      "NotFoundErrorResponse": {
+        "description": "Error response, when no records are found with the given id.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "No car is found."
+                }
+              }
+            }
+          }
+        }
+      },
+      "GenericErrorResponse": {
+        "description": "Generic error response (e.g. in case of invalid values or server errors).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Fuel consumption should be greater than 0."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
