@@ -68,7 +68,7 @@ app.post('/api/:neptun/car', sanitizeNeptun, (req, res) => {
     } catch (err: any) {
         res.status(400).json({
             success: false,
-            message: err.message
+            message: err
         });
         return;
     }
@@ -79,8 +79,18 @@ app.put('/api/:neptun/car', sanitizeNeptun, (req, res) => {
 
     logger.info(`Updating car (${neptun})`);
 
-    const car = sanitizeCar(req.body);
+    let car;
 
+    try {
+        car = sanitizeCar(req.body);
+    } catch (err: any) {
+        res.status(400).json({
+            success: false,
+            message: err
+        });
+        return;
+    }
+    
     if (!db.carBy(neptun, car.id)) {
         res.status(404).json({
             success: false,
