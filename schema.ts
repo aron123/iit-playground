@@ -55,7 +55,7 @@ export function sanitizeCar(car: any): Car {
     const model = String(car.model);
 
     if (typeof car.electric !== 'boolean') {
-        throw 'Electric property should be a Boolean.'
+        throw 'Electric property should be a Boolean.';
     }
 
     const electric = !!car.electric;
@@ -63,11 +63,19 @@ export function sanitizeCar(car: any): Car {
     const fuelUse = parseFloat(car.fuelUse)
 
     if (isNaN(fuelUse)) {
-        throw 'Fuel use should be given as a floating-point number.'
+        throw 'Fuel use should be given as a floating-point number.';
+    }
+
+    if (electric && fuelUse != 0) {
+        throw 'Fuel consumption should be 0 for electric cars.';
+    }
+
+    if (!electric && fuelUse <= 0) {
+        throw 'Fuel consumption should be greater than 0.';
     }
 
     if (typeof car.owner !== 'string' || car.owner.length < 3 || !car.owner.includes(' ')) {
-        throw 'Owner should have first and lastnames.'
+        throw 'Owner should have valid first and lastnames.';
     }
 
     const owner = car.owner;
