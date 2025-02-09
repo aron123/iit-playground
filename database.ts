@@ -6,14 +6,18 @@ const DEFAULT_CARS_NUM = 5;
 export class Database {
     private static _instance: Database;
 
-    private validNeptunCodes: string[] = [
-        'TEST01',
-        'UHV61T',
-    ]
+    private validNeptunCodes: string[] = [];
 
     private db: TaxiCompanyDatabase = {};
 
     private constructor() {
+        if (!process.env.NEPTUN_CODES) {
+            throw "Error: No Neptun codes defined.";
+        }
+
+        this.validNeptunCodes = String(process.env.NEPTUN_CODES).split(',');
+
+        logger.info(`Registered Neptun codes: ${this.validNeptunCodes}`);
         logger.info('Database is created.');
     }
 

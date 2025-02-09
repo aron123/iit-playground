@@ -12,9 +12,8 @@ app.use(express.static('public'));
 app.use('/api', express.json({ limit: '2mb' }));
 
 app.use('/api/:neptun', checkNeptun);
-app.use('/api/:neptun', sanitizeNeptun);
 
-app.get('/api/:neptun/car', (req, res) => {
+app.get('/api/:neptun/car', sanitizeNeptun, (req, res) => {
     const neptun = req.params.neptun;
 
     logger.info(`Listing all cars (${neptun})`);
@@ -22,8 +21,9 @@ app.get('/api/:neptun/car', (req, res) => {
     res.json(db.carsOf(req.params.neptun));
 });
 
-app.get('/api/:neptun/car/:id', (req, res) => {
+app.get('/api/:neptun/car/:id', sanitizeNeptun, (req, res) => {
     const neptun = req.params.neptun;
+    console.log(neptun)
     const carId = parseInt(req.params.id);
 
     logger.info(`Listing car with unique ID (${neptun}, ${carId})`);
@@ -48,7 +48,7 @@ app.get('/api/:neptun/car/:id', (req, res) => {
     res.json(carFound);
 });
 
-app.post('/api/:neptun/car', (req, res) => {
+app.post('/api/:neptun/car', sanitizeNeptun, (req, res) => {
     const neptun = req.params.neptun;
     const MAX_CARS_PER_STUDENT = 10;
 
@@ -75,7 +75,7 @@ app.post('/api/:neptun/car', (req, res) => {
     }
 });
 
-app.put('/api/:neptun/car', (req, res) => {
+app.put('/api/:neptun/car', sanitizeNeptun, (req, res) => {
     const neptun = req.params.neptun;
 
     logger.info(`Updating car (${neptun})`);
@@ -95,7 +95,7 @@ app.put('/api/:neptun/car', (req, res) => {
     res.json(updatedCar);
 });
 
-app.delete('/api/:neptun/car/:id', (req, res) => {
+app.delete('/api/:neptun/car/:id', sanitizeNeptun, (req, res) => {
     const neptun = req.params.neptun;
     const carId = parseInt(req.params.id);
 
