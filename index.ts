@@ -23,7 +23,6 @@ app.get('/api/:neptun/car', sanitizeNeptun, (req, res) => {
 
 app.get('/api/:neptun/car/:id', sanitizeNeptun, (req, res) => {
     const neptun = req.params.neptun;
-    console.log(neptun)
     const carId = parseInt(req.params.id);
 
     logger.info(`Listing car with unique ID (${neptun}, ${carId})`);
