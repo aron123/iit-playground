@@ -1,13 +1,15 @@
 import express from 'express';
 import { logger } from './logger';
 import { Database } from './database';
-import { checkNeptun, handleGenericError, sanitizeNeptun } from './middlewares';
+import { allowCors, checkNeptun, handleGenericError, sanitizeNeptun } from './middlewares';
 import { sanitizeCar } from './schema';
 
 const app = express();
 const db = Database.instance();
 
 app.use(express.static('public'));
+
+app.use(allowCors);
 
 app.use('/api', express.json({ limit: '2mb' }));
 
