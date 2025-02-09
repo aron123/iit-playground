@@ -1,7 +1,7 @@
 import express from 'express';
 import { logger } from './logger';
 import { Database } from './database';
-import { checkNeptun, handleGenericError } from './middlewares';
+import { checkNeptun, handleGenericError, sanitizeNeptun } from './middlewares';
 import { sanitizeCar } from './schema';
 
 const app = express();
@@ -12,6 +12,7 @@ app.use(express.static('public'));
 app.use('/api', express.json({ limit: '2mb' }));
 
 app.use('/api/:neptun', checkNeptun);
+app.use('/api/:neptun', sanitizeNeptun);
 
 app.get('/api/:neptun/car', (req, res) => {
     const neptun = req.params.neptun;

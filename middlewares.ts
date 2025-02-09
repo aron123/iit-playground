@@ -13,6 +13,11 @@ export const checkNeptun = (req: any, res: any, next: any) => {
     next();
 };
 
+export const sanitizeNeptun = (req: any, res: any, next: any) => {
+    req.params.neptun = String(req.params.neptun).toUpperCase();
+    next();
+};
+
 export const handleGenericError = (err: any, req: any, res: any, next: any) => {
     logger.error(`Unexpected error occurred: ${err.message}`, err);
     res.status(500).json({
