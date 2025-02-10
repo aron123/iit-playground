@@ -134,5 +134,5 @@ app.listen(port, (err) => {
         return logger.error(`Cannot start server: ${err}`);
     }
 
-    logger.info(`Server started using port ${port}`);
+    logger.info(`Server started in "${process.env.NODE_ENV}" mode, using port ${port}`);
 });
