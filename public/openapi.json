@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Taxi Register - IIT Playground",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "The server stores data on vehicles of imaginary taxi companies. Each taxi company is represented by a student. \n\nStudents identify themself in the system with their Neptun code. A maximum of 10 cars can be stored per student.\n\n**IMPORTANT:** The system is not a permanent storage, data will be reset every midnight.",
     "contact": {
       "name": "Áron Kiss (University of Miskolc)",
@@ -30,6 +30,9 @@
       ],
       "get": {
         "summary": "List all cars",
+        "tags": [
+          "read"
+        ],
         "description": "Lists all cars. By default, 5 randomly generated car is assigned to each student at system startup.",
         "operationId": "listCars",
         "responses": {
@@ -60,6 +63,9 @@
       "post": {
         "summary": "Create a new car.",
         "description": "Creates a new car. A maximum of 10 cars can be stored per student. The given ID will be overridden by the database, please check the response for the valid Car identifier.",
+        "tags": [
+          "write"
+        ],
         "operationId": "createCar",
         "requestBody": {
           "required": true,
@@ -92,6 +98,9 @@
       },
       "put": {
         "summary": "Modify a car",
+        "tags": [
+          "write"
+        ],
         "description": "Modifies an already existing car.",
         "operationId": "modifyCar",
         "requestBody": {
@@ -142,6 +151,9 @@
       ],
       "get": {
         "summary": "Get a car by ID",
+        "tags": [
+          "read"
+        ],
         "description": "Queries a car by its unique identifier.",
         "operationId": "getCar",
         "parameters": [
@@ -178,6 +190,9 @@
       },
       "delete": {
         "summary": "Delete a car by ID",
+        "tags": [
+          "write"
+        ],
         "description": "Deletes a car by its unique identifier.",
         "operationId": "deleteCar",
         "parameters": [
