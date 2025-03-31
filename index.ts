@@ -3,6 +3,7 @@ import { logger } from './logger';
 import { Database } from './database';
 import { allowCors, checkNeptun, handleGenericError, sanitizeNeptun } from './middlewares';
 import { sanitizeCar } from './schema';
+import { registerExtraOperations } from './extra';
 
 const app = express();
 const db = Database.instance();
@@ -62,7 +63,7 @@ app.post('/api/:neptun/car', sanitizeNeptun, (req, res) => {
         });
         return;
     }
-    
+
     try {
         const car = sanitizeCar(req.body);
         const savedCar = db.saveCar(neptun, car);
@@ -92,7 +93,7 @@ app.put('/api/:neptun/car', sanitizeNeptun, (req, res) => {
         });
         return;
     }
-    
+
     if (!db.carBy(neptun, car.id)) {
         res.status(404).json({
             success: false,
@@ -111,7 +112,7 @@ app.delete('/api/:neptun/car/:id', sanitizeNeptun, (req, res) => {
     const carId = parseInt(req.params.id);
 
     logger.info(`Deleting car (${neptun}, ${carId})`);
-    
+
     const success = db.deleteCar(neptun, carId);
 
     if (!success) {
@@ -124,6 +125,8 @@ app.delete('/api/:neptun/car/:id', sanitizeNeptun, (req, res) => {
 
     res.json({ success: true });
 });
+
+registerExtraOperations(app);
 
 app.use(handleGenericError);
 
