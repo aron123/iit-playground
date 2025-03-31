@@ -14,6 +14,8 @@ app.use(allowCors);
 
 app.use('/api', express.json({ limit: '2mb' }));
 
+registerExtraOperations(app);
+
 app.use('/api/:neptun', checkNeptun);
 
 app.get('/api/:neptun/car', sanitizeNeptun, (req, res) => {
@@ -125,8 +127,6 @@ app.delete('/api/:neptun/car/:id', sanitizeNeptun, (req, res) => {
 
     res.json({ success: true });
 });
-
-registerExtraOperations(app);
 
 app.use(handleGenericError);
 

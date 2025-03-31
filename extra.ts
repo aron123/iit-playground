@@ -1,7 +1,7 @@
 import express from 'express';
 
 export function registerExtraOperations(app: express.Express) {
-    app.get('/api/:neptun/available-models', (req, res) => {
+    app.get('/api/available-models', (req, res) => {
         const brand = req.query.brand as string;
 
         const validBrands = [
@@ -19,7 +19,7 @@ export function registerExtraOperations(app: express.Express) {
         res.json(shuffled.slice(0, 1 + Math.floor(Math.random() * (models.length - 1))));
     });
 
-    app.get('/api/:neptun/validate-license-plate', (req, res) => {
+    app.get('/api/validate-license-plate', (req, res) => {
         const plate = req.query.plate as string;
 
         const pattern = /^[A-Z]{3,4}-?\d{3}$/;
@@ -28,7 +28,7 @@ export function registerExtraOperations(app: express.Express) {
         res.json({ valid: match, message: match ? 'It is a valid license plate number.' : 'Invalid license plate number.' });
     });
 
-    app.get('/api/:neptun/fuel-log', (req, res) => {
+    app.get('/api/fuel-log', (req, res) => {
         const licensePlate = req.query.licensePlate as string;
 
         const validLicensePlates = ['ABC-123', 'TEST-666', 'BELA-112'];
@@ -50,7 +50,7 @@ export function registerExtraOperations(app: express.Express) {
         ]);
     })
 
-    app.get('/api/:neptun/driver-ratings', (req, res) => {
+    app.get('/api/driver-ratings', (req, res) => {
         const lowerLimit = parseFloat(req.query.limit as string);
 
         if (isNaN(lowerLimit) || lowerLimit < 0 || lowerLimit > 5) {
@@ -74,7 +74,7 @@ export function registerExtraOperations(app: express.Express) {
         res.json(drivers.filter(driver => driver.rating >= lowerLimit));
     });
 
-    app.get('/api/:neptun/customers', (req, res) => {
+    app.get('/api/customers', (req, res) => {
         const query = req.query.search as string;
 
         if (!query) {
