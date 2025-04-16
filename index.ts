@@ -12,7 +12,7 @@ app.use(express.static('public'));
 
 app.use(allowCors);
 
-app.use('/api', express.json({ limit: '2mb' }));
+app.use('/api', express.json({ limit: '2mb', type: () => true }));
 
 registerExtraOperations(app);
 
