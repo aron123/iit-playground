@@ -1,7 +1,7 @@
 import express from 'express';
 import { logger } from './logger';
 import { Database } from './database';
-import { allowCors, checkNeptun, handleGenericError, sanitizeNeptun } from './middlewares';
+import { allowCors, checkNeptun, handleGenericError, handleSyntaxError, sanitizeNeptun } from './middlewares';
 import { sanitizeCar } from './schema';
 import { registerExtraOperations } from './extra';
 
@@ -13,6 +13,7 @@ app.use(express.static('public'));
 app.use(allowCors);
 
 app.use('/api', express.json({ limit: '2mb', type: () => true }));
+app.use(handleSyntaxError);
 
 registerExtraOperations(app);
 
