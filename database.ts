@@ -1,5 +1,5 @@
 import { logger } from "./logger";
-import { Car, TaxiCompanyDatabase } from "./schema";
+import { Car, DatabaseCounter, TaxiCompanyDatabase } from "./schema";
 
 const DEFAULT_CARS_NUM = 5;
 
@@ -10,6 +10,8 @@ export class Database {
 
     private db: TaxiCompanyDatabase = {};
 
+    private counter: DatabaseCounter = {};
+
     private constructor() {
         if (process.env.NODE_ENV == 'production' && !process.env.NEPTUN_CODES) {
             throw "Error: No Neptun codes defined.";
@@ -18,7 +20,7 @@ export class Database {
         if (process.env.NODE_ENV == 'production') {
             this.validNeptunCodes = String(process.env.NEPTUN_CODES).split(',');
         }
-        
+
         logger.info(`Registered Neptun codes: ${this.validNeptunCodes}`);
         logger.info('Database is created.');
     }
@@ -36,16 +38,16 @@ export class Database {
     }
 
     public carsOf(neptunCode: string): Car[] {
-        return this.db[neptunCode];
+        return this.db[neptunCode] || [];
     }
 
     public carBy(neptunCode: string, id: number): Car | undefined {
         const cars = this.db[neptunCode];
-        return cars.find((car) => car.id === id);
+        return cars?.find((car) => car.id === id);
     }
 
     public saveCar(neptunCode: string, car: Car): Car {
-        car.id = this.carsOf(neptunCode).length;
+        car.id = this.counter[neptunCode]++;
         this.db[neptunCode].push(car);
         return car;
     }
@@ -71,20 +73,12 @@ export class Database {
         if (idx < 0) {
             return false;
         }
-        
+
         this.db[neptunCode].splice(idx, 1);
         return true;
     }
 
     public randomCar(neptunCode: string): Car {
-        let id = 0;
-
-        if (!Object.prototype.hasOwnProperty.call(this.db, neptunCode)) {
-            id = 1;
-        } else {
-            id = this.db[neptunCode].length;
-        }
-
         const brands: Car['brand'][] = ['Toyota', 'Honda', 'Ford', 'Chevrolet', 'Nissan', 'BMW', 'Mercedes-Benz',
             'Volkswagen', 'Audi', 'Hyundai', 'Kia', 'Subaru', 'Lexus', 'Mazda', 'Tesla',
             'Jeep', 'Porsche', 'Volvo', 'Jaguar', 'Land Rover', 'Mitsubishi', 'Ferrari', 'Lamborghini'];
@@ -104,7 +98,7 @@ export class Database {
         ];
 
         return {
-            id,
+            id: 0, // will be set on saving
             brand: brands[Math.floor(Math.random() * brands.length)],
             model: models[Math.floor(Math.random() * models.length)],
             electric,
@@ -120,18 +114,20 @@ export class Database {
         const end = new Date(endYear, 11, 31).getTime();
         const randomTimestamp = start + Math.random() * (end - start);
         const randomDate = new Date(randomTimestamp);
-    
+
         return randomDate.toISOString().split('T')[0];
     }
 
     private initialize() {
         for (const neptun of this.validNeptunCodes) {
             this.db[neptun] = [];
+            this.counter[neptun] = 0;
 
             for (let i = 0; i < DEFAULT_CARS_NUM; i++) {
-                this.db[neptun].push(this.randomCar(neptun));
+                const car = this.randomCar(neptun);
+                car.id = this.counter[neptun]++;
+                this.db[neptun].push(car);
             }
         }
     }
-
 }

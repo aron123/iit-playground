@@ -12,6 +12,10 @@ export type TaxiCompanyDatabase = {
     [neptun: string]: Car[]; // The object has Neptun code keys, each mapping to an array of Car objects
 };
 
+export type DatabaseCounter = {
+    [neptun: string]: number;
+};
+
 function isValidDate(dateString: string): boolean {
     // Format: YYYY-MM-DD
     const regex = /^(?:19|20)\d\d-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])$/;
