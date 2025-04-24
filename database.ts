@@ -43,7 +43,7 @@ export class Database {
 
     public carBy(neptunCode: string, id: number): Car | undefined {
         const cars = this.db[neptunCode];
-        return cars?.find((car) => car.id === id);
+        return cars?.find((car) => car.id == id);
     }
 
     public saveCar(neptunCode: string, car: Car): Car {
