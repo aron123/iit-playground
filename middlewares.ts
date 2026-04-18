@@ -21,11 +21,20 @@ export const sanitizeNeptun = (req: any, res: any, next: any) => {
 export const handleSyntaxError = (err: any, req: any, res: any, next: any) => {
     if (err instanceof SyntaxError) {
         logger.error(`Syntax error in body:`, err);
-        res.status(400).json({
+        return res.status(400).json({
             success: false,
             message: 'Syntax error: Request body should contain a valid JSON object.'
         });
     }
+
+    if (err.message) {
+        return res.status(400).json({
+            success: false,
+            message: err.message
+        });
+    }
+
+    throw err;
 }
 
 export const handleGenericError = (err: any, req: any, res: any, next: any) => {
