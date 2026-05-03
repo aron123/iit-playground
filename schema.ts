@@ -36,7 +36,7 @@ export function sanitizeCar(car: any): Car {
         throw 'Request body is invalid. A Car object must be given.';
     }
 
-    const id = car.id;
+    const id = parseInt(car.id);
 
     if (!car.brand) {
         throw 'Car brand should be defined.';
